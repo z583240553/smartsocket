@@ -108,7 +108,7 @@ function _M.decode(payload)
 			--有功总电量
 			packet[status_cmds[1]] = (bit.lshift( getnumber(12) , 24 ) + bit.lshift( getnumber(13) , 16 ) + bit.lshift( getnumber(14) , 8 ) + getnumber(15))/10
 			--电压
-			packet[status_cmds[2]] = (bit.lshift( getnumber(16) , 8 ) + getnumber(17))/100
+			packet[status_cmds[2]] = (bit.lshift( getnumber(16) , 8 ) + getnumber(17))/10
 			--电流
 			packet[status_cmds[3]] = (bit.lshift( getnumber(18) , 8 ) + getnumber(19))/100
 			--有功功率

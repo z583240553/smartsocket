@@ -17,11 +17,10 @@ local cmds = {
 --Json的Key，用于清洁车云端显示状态
 local status_cmds = {
   [1] = "TotalActivePower",     --有功总电量
-  [2] = "PositiveActivePower",  --正向有功电量
-  [3] = "ReverseActivePower",   --反向有功电量
-  [4] = "Voltage",           	--电压
-  [5] = "Current",           	--电流
-  [6] = "ActivePower",       	--有功功率
+  [2] = "Voltage",           	--电压
+  [3] = "Current",           	--电流
+  [4] = "ActivePower",       	--有功功率
+  [5] = "RunState",       	    --当前状态
 }
 
 --FCS校验
@@ -107,17 +106,15 @@ function _M.decode(payload)
 
 			--依次读入上传的数据
 			--有功总电量
-			packet[status_cmds[1]] = (getnumber(12)*1000000+getnumber(13)*10000+getnumber(14)*100+getnumber(15))/100
-			--正向有功电量
-			packet[status_cmds[2]] = (getnumber(16)*1000000+getnumber(17)*10000+getnumber(18)*100+getnumber(19))/100 
-			--反向有功电量
-			packet[status_cmds[3]] = (getnumber(20)*1000000+getnumber(21)*10000+getnumber(22)*100+getnumber(23))/100 
+			packet[status_cmds[1]] = (bit.lshift( getnumber(12) , 24 ) + bit.lshift( getnumber(13) , 16 ) + bit.lshift( getnumber(14) , 8 ) + getnumber(15))/10
 			--电压
-			packet[status_cmds[4]] = (getnumber(24)*100+getnumber(25))/10
+			packet[status_cmds[2]] = (bit.lshift( getnumber(16) , 8 ) + getnumber(17))/100
 			--电流
-			packet[status_cmds[5]] = (getnumber(26)*1000000+getnumber(27)*10000+getnumber(28)*100+getnumber(29))/1000 
+			packet[status_cmds[3]] = (bit.lshift( getnumber(18) , 8 ) + getnumber(19))/100
 			--有功功率
-			packet[status_cmds[6]] = (getnumber(30)*1000000+getnumber(31)*10000+getnumber(32)*100+getnumber(33))/10000 
+			packet[status_cmds[4]] = bit.lshift( getnumber(20) , 8 ) + getnumber(21)
+			--运行状态
+			packet[status_cmds[5]] = getnumber(22)
 		end
 
 	else

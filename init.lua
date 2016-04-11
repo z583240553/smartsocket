@@ -46,6 +46,12 @@ local status_cmds = {
   [28] = "Socket4_RunState",           	--电流
   [29] = "Socket5_RunState",       	--有功功率
   [30] = "Socket6_RunState",       	    --当前状态
+  [31] = "Socket1_CommState",       	    --当前状态
+  [32] = "Socket2_CommState",     --有功总电量
+  [33] = "Socket3_CommState",           	--电压
+  [34] = "Socket4_CommState",           	--电流
+  [35] = "Socket5_CommState",       	--有功功率
+  [36] = "Socket6_CommState",       	    --当前状态
 }
 
 --FCS校验
@@ -149,6 +155,10 @@ function _M.decode(payload)
 			--运行状态
 			for i=0,5 do
 				packet[status_cmds[i+25]]  = bit.band(getnumber(72),bit.lshift(1,i))
+			end
+			--通讯状态
+			for i=0,5 do
+				packet[status_cmds[i+31]]  = bit.band(getnumber(73),bit.lshift(1,i))
 			end
 		end
 

@@ -149,6 +149,9 @@ function _M.decode(payload)
 			--运行状态
 			for i=0,5 do
 				packet[status_cmds[i+25]] = bit.band(getnumber(72),bit.lshift(1,i))
+				if(packet[status_cmds[i+25]] == 1)
+					packet[status_cmds[i+25]] = '报警'
+				else packet[status_cmds[i+25]] = '正常'
 			end
 		end
 

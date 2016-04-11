@@ -147,14 +147,8 @@ function _M.decode(payload)
 				packet[status_cmds[i+19]] = bit.lshift( getnumber(60+i*2) , 8 ) + getnumber(61+i*2)
 			end
 			--运行状态
-			local bitbuff_table={}
 			for i=0,5 do
-				bitbuff_table[i] = bit.band(getnumber(72),bit.lshift(1,i))
-				if(bitbuff_table[i] == 1)
-					packet[status_cmds[i+25]] = 'alarm'
-				else 
-					packet[status_cmds[i+25]] = 'normal'
-				end
+				packet[status_cmds[i+25]]  = bit.band(getnumber(72),bit.lshift(1,i))
 			end
 		end
 

@@ -16,11 +16,36 @@ local cmds = {
 
 --Json的Key，用于清洁车云端显示状态
 local status_cmds = {
-  [1] = "TotalActivePower",     --有功总电量
-  [2] = "Voltage",           	--电压
-  [3] = "Current",           	--电流
-  [4] = "ActivePower",       	--有功功率
-  [5] = "RunState",       	    --当前状态
+  [1] = "Socket1_TotalActivePower",     --有功总电量
+  [2] = "Socket2_TotalActivePower",           	--电压
+  [3] = "Socket3_TotalActivePower",           	--电流
+  [4] = "Socket4_TotalActivePower",       	--有功功率
+  [5] = "Socket5_TotalActivePower",       	    --当前状态
+  [6] = "Socket6_TotalActivePower",     --有功总电量
+  [7] = "Socket1_Voltage",           	--电压
+  [8] = "Socket2_Voltage",           	--电流
+  [9] = "Socket3_Voltage",       	--有功功率
+  [10] = "Socket4_Voltage",       	    --当前状态
+  [11] = "Socket5_Voltage",     --有功总电量
+  [12] = "Socket6_Voltage",           	--电压
+  [13] = "Socket1_Current",           	--电流
+  [14] = "Socket2_Current",       	--有功功率
+  [15] = "Socket3_Current",       	    --当前状态
+  [16] = "Socket4_Current",     --有功总电量
+  [17] = "Socket5_Current",           	--电压
+  [18] = "Socket6_Current",           	--电流
+  [19] = "Socket1_ActivePower",       	--有功功率
+  [20] = "Socket2_ActivePower",       	    --当前状态
+  [21] = "Socket3_ActivePower",     --有功总电量
+  [22] = "Socket4_ActivePower",           	--电压
+  [23] = "Socket5_ActivePower",           	--电流
+  [24] = "Socket6_ActivePower",       	--有功功率
+  [25] = "Socket1_RunState",       	    --当前状态
+  [26] = "Socket2_RunState",     --有功总电量
+  [27] = "Socket3_RunState",           	--电压
+  [28] = "Socket4_RunState",           	--电流
+  [29] = "Socket5_RunState",       	--有功功率
+  [30] = "Socket6_RunState",       	    --当前状态
 }
 
 --FCS校验
@@ -106,15 +131,25 @@ function _M.decode(payload)
 
 			--依次读入上传的数据
 			--有功总电量
-			packet[status_cmds[1]] = (bit.lshift( getnumber(12) , 24 ) + bit.lshift( getnumber(13) , 16 ) + bit.lshift( getnumber(14) , 8 ) + getnumber(15))/10
+			for i=0,5 do
+				packet[status_cmds[i+1]] = (bit.lshift( getnumber(12+i*4) , 24 ) + bit.lshift( getnumber(13+i*4) , 16 ) + bit.lshift( getnumber(14+i*4) , 8 ) + getnumber(15+i*4))/10
+			end
 			--电压
-			packet[status_cmds[2]] = (bit.lshift( getnumber(16) , 8 ) + getnumber(17))/10
+			for i=0,5 do
+				packet[status_cmds[i+7]] = (bit.lshift( getnumber(36+i*2) , 8 ) + getnumber(37+i*2))/10
+			end
 			--电流
-			packet[status_cmds[3]] = (bit.lshift( getnumber(18) , 8 ) + getnumber(19))/100
+			for i=0,5 do
+				packet[status_cmds[i+13]] = (bit.lshift( getnumber(48+i*2) , 8 ) + getnumber(49+i*2))/100
+			end
 			--有功功率
-			packet[status_cmds[4]] = bit.lshift( getnumber(20) , 8 ) + getnumber(21)
+			for i=0,5 do
+				packet[status_cmds[i+19]] = bit.lshift( getnumber(60+i*2) , 8 ) + getnumber(61+i*2)
+			end
 			--运行状态
-			packet[status_cmds[5]] = getnumber(22)
+			for i=0,5 do
+				packet[status_cmds[i+25]] = bit.band(getnumber(72),bit.lshift(1,i))
+			end
 		end
 
 	else

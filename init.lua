@@ -154,11 +154,21 @@ function _M.decode(payload)
 			end
 			--运行状态
 			for i=0,5 do
-				packet[status_cmds[i+25]]  = bit.band(getnumber(72),bit.lshift(1,i))
+				local x = bit.band(getnumber(72),bit.lshift(1,i))
+				if(x == 0) then 
+	               packet[status_cmds[i+25]] = 0
+	            else
+	               packet[status_cmds[i+25]] = 1
+	            end 
 			end
 			--通讯状态
 			for i=0,5 do
-				packet[status_cmds[i+31]]  = bit.band(getnumber(73),bit.lshift(1,i))
+				local y = bit.band(getnumber(73),bit.lshift(1,i))
+				if(y == 0) then 
+	               packet[status_cmds[i+31]] = 0
+	            else
+	               packet[status_cmds[i+31]] = 1
+	            end 
 			end
 		end
 
